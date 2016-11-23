@@ -40,6 +40,10 @@
   <meta name="msapplication-TileColor" content="#3372DF">
   <meta name="msapplication-navbutton-color" content="#303F9F">
 
+  <!-- Dialog Polyfill -->
+  <script src="internals/vendors/dialog-polyfill.js"></script>
+  <link rel="stylesheet" type="text/css" href="internals/vendors/dialog-polyfill.css" />
+
   <!-- Material Design Lite -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
@@ -64,8 +68,11 @@
         <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
           Sign-out
         </button>
+        <button hidden id="sign-up" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          <i class="material-icons">ic_lock_open</i>Sign-up
+        </button>
         <button hidden id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
-          <i class="material-icons">account_circle</i>Sign-in with Google
+          <i class="material-icons">account_circle</i>Sign-in
         </button>
       </div>
     </div>
@@ -106,8 +113,28 @@
     </div>
   </main>
 </div>
+<dialog class="mdl-dialog">
+  <h1 class="mdl-dialog__title">Authentication</h1>
+  <div class="mdl-dialog__content">
+    <div class="mdl-textfield mdl-js-textfield">
+      <input class="mdl-textfield__input" type="email" id="email">
+      <label class="mdl-textfield__label" for="email">Email</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield">
+      <input class="mdl-textfield__input" type="password" id="password">
+      <label class="mdl-textfield__label" for="password">Password</label>
+    </div>
+    <div id="auth-error" style="color: red;">
+    </div>
+  </div>
+  <div class="mdl-dialog__actions" style="display: flex; justify-content: space-between;">
+    <button type="button" id="invoke-auth" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Enter</button>
+    <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect close">Cancel</button>
+  </div>
+</dialog>
 <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
 <script src="steps/step-1.js"></script>
+<script src="steps/step-2.js"></script>
 <script src="internals/scripts/api.js"></script>
 <script src="internals/scripts/main.js"></script>
 </body>

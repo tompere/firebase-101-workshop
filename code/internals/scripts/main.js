@@ -15,6 +15,11 @@
  */
 'use strict';
 
+function closeModal() {
+  this.dialog.close();
+  document.querySelector('#auth-error').innerHTML = '';
+}
+
 // Initializes FriendlyChat.
 function FriendlyChat() {
   this.checkSetup();
@@ -30,13 +35,24 @@ function FriendlyChat() {
   this.userPic = document.getElementById('user-pic');
   this.userName = document.getElementById('user-name');
   this.signInButton = document.getElementById('sign-in');
+  this.signUpButton = document.getElementById('sign-up');
+  this.invokeAuthButton = document.getElementById('invoke-auth');
   this.signOutButton = document.getElementById('sign-out');
   this.signInSnackbar = document.getElementById('must-signin-snackbar');
+
+  // auth modal
+  this.dialog = document.querySelector('dialog');
+  if (!this.dialog.showModal) {
+    window.dialogPolyfill.registerDialog(this.dialog);
+  }
+  this.dialog.querySelector('.close').addEventListener('click', closeModal.bind(this));
 
   // Saves message on form submit.
   this.messageForm.addEventListener('submit', this.saveMessage.bind(this));
   this.signOutButton.addEventListener('click', this.signOut.bind(this));
-  this.signInButton.addEventListener('click', this.signIn.bind(this));
+  this.signInButton.addEventListener('click', this.showAuthModal.bind(this, 'sign-in'));
+  this.signUpButton.addEventListener('click', this.showAuthModal.bind(this, 'sign-up'));
+  this.invokeAuthButton.addEventListener('click', this.invokeAuth.bind(this));
 
   // Toggle for the button.
   var buttonTogglingHandler = this.toggleButton.bind(this);
@@ -109,22 +125,41 @@ FriendlyChat.prototype.saveImageMessage = function(event) {
   }
 };
 
+FriendlyChat.prototype.invokeAuth = function () {
+  var mode = this.dialog.getAttribute('data-mode');
+  var email = document.querySelector('#email').value;
+  var password = document.querySelector('#password').value;
+  if (mode === 'sign-in') {
+    api.signIn(email, password, closeModal.bind(this), this.setError);
+  } else if (mode === 'sign-up') {
+    api.signUp(email, password, closeModal.bind(this), this.setError);
+  } else {
+   throw new Error('did not recognized modal mode: ' + mode);
+  }
+};
+
+FriendlyChat.prototype.setError = function (errorMessage) {
+  document.querySelector('#auth-error').innerHTML = errorMessage;
+};
+
 // Signs-in Friendly Chat.
-FriendlyChat.prototype.signIn = function() {
-  // TODO(DEVELOPER): Sign in Firebase with credential from the Google user.
+FriendlyChat.prototype.showAuthModal = function(mode) {
+  this.dialog.showModal();
+  this.dialog.setAttribute('data-mode', mode);
 };
 
 // Signs-out of Friendly Chat.
 FriendlyChat.prototype.signOut = function() {
-  // TODO(DEVELOPER): Sign out of Firebase.
+  api.signOut();
 };
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
 FriendlyChat.prototype.onAuthStateChanged = function(user) {
   if (user) { // User is signed in!
+    var userData = api.getUserData(user);
     // Get profile pic and user's name from the Firebase user object.
-    var profilePicUrl = null;   // TODO(DEVELOPER): Get profile pic.
-    var userName = null;        // TODO(DEVELOPER): Get user's name.
+    var profilePicUrl = 'https://robohash.org/' + encodeURIComponent(userData.email) + '?size=40x40&bgset=bg2';
+    var userName = userData.email;
 
     // Set the user's profile pic and name.
     this.userPic.style.backgroundImage = 'url(' + profilePicUrl + ')';
@@ -137,6 +172,7 @@ FriendlyChat.prototype.onAuthStateChanged = function(user) {
 
     // Hide sign-in button.
     this.signInButton.setAttribute('hidden', 'true');
+    this.signUpButton.setAttribute('hidden', 'true');
 
     // We load currently existing chant messages.
     this.loadMessages();
@@ -148,13 +184,15 @@ FriendlyChat.prototype.onAuthStateChanged = function(user) {
 
     // Show sign-in button.
     this.signInButton.removeAttribute('hidden');
+    this.signUpButton.removeAttribute('hidden');
   }
 };
 
 // Returns true if user is signed-in. Otherwise false and displays a message.
 FriendlyChat.prototype.checkSignedInWithMessage = function() {
-  /* TODO(DEVELOPER): Check if user is signed-in Firebase. */
-
+  if (api.isUserAuthenticated()) {
+    return true;
+  }
   // Display a message to the user using a Toast.
   var data = {
     message: 'You must sign-in first',
