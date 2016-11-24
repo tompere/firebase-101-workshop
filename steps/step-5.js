@@ -5,12 +5,16 @@
  * you can use 'firebase' object
  **/
 
+function buildImageRef(currentUser, file) {
+  return (currentUser.uid + '/' + Date.now() + '/' + file.name);
+}
+
 function pushImageMessageImpl(messagesRef, imageMessage) {
   return messagesRef.push(imageMessage);
 }
 
 function uploadImageToStorageImpl(currentUser, file) {
-  return firebase.storage().ref(currentUser.uid + '/' + Date.now() + '/' + file.name)
+  return firebase.storage().ref(buildImageRef(currentUser, file))
     .put(file, {contentType: file.type})
 }
 
