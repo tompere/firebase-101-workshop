@@ -20,6 +20,10 @@ function closeModal() {
   document.querySelector('#auth-error').innerHTML = '';
 }
 
+function getRoboHashImageUrl(email) {
+  return 'https://robohash.org/' + encodeURIComponent(email) + '?size=40x40&bgset=bg2';
+}
+
 // Initializes FriendlyChat.
 function FriendlyChat() {
   this.checkSetup();
@@ -80,14 +84,14 @@ FriendlyChat.prototype.initFirebase = function() {
 // Loads chat messages history and listens for upcoming ones.
 FriendlyChat.prototype.loadMessages = function() {
   // Reference to the /messages/ database path.
-  var messagesRef = api.createMessagesRef();
+  this.messagesRef = api.createMessagesRef();
   // Make sure we remove all previous listeners.
-  api.clearListeners(messagesRef);
+  api.clearListeners(this.messagesRef);
   // Loads the last 12 messages and listen for new ones.
   var setMessage = function(msg) {
     this.displayMessage(msg.uniqueKey, msg.userDisplayName, msg.messageText, msg.userPhotoUrl, msg.messageImageUrl);
   }.bind(this);
-  api.loadMessagesAndAttachListeners(messagesRef, 12, ['child_added', 'child_changed'], setMessage)
+  api.loadMessagesAndAttachListeners(this.messagesRef, 12, ['child_added', 'child_changed'], setMessage)
 };
 
 // Saves a new message on the Firebase DB.
@@ -95,9 +99,20 @@ FriendlyChat.prototype.saveMessage = function(e) {
   e.preventDefault();
   // Check that the user entered a message and is signed in.
   if (this.messageInput.value && this.checkSignedInWithMessage()) {
-
-    // TODO(DEVELOPER): push new message to Firebase.
-
+    var currentUser = this.auth.currentUser;
+    var message = {
+      name: currentUser.email,
+      text: this.messageInput.value,
+      photoUrl: getRoboHashImageUrl(currentUser.email)
+    };
+    var onSuccess = function () {
+      FriendlyChat.resetMaterialTextfield(this.messageInput);
+      this.toggleButton();
+    }.bind(this);
+    var onError = function (error) {
+      console.error('Error writing new message to Firebase Database', error);
+    };
+    api.pushMessage(this.messagesRef, message, onSuccess, onError);
   }
 };
 
@@ -166,7 +181,7 @@ FriendlyChat.prototype.onAuthStateChanged = function(user) {
   if (user) { // User is signed in!
     var userData = api.getUserData(user);
     // Get profile pic and user's name from the Firebase user object.
-    var profilePicUrl = 'https://robohash.org/' + encodeURIComponent(userData.email) + '?size=40x40&bgset=bg2';
+    var profilePicUrl = getRoboHashImageUrl(userData.email);
     var userName = userData.email;
 
     // Set the user's profile pic and name.

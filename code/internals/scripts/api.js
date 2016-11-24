@@ -8,5 +8,6 @@ window.api = {
   isUserAuthenticated: step2._isUserAuthenticated,
   createMessagesRef: step3._createMessagesRef,
   clearListeners: step3._clearListeners,
-  loadMessagesAndAttachListeners: step3._loadMessagesAndAttachListeners
+  loadMessagesAndAttachListeners: step3._loadMessagesAndAttachListeners,
+  pushMessage: step4._pushMessage
 };

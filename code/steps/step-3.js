@@ -2,7 +2,6 @@
  * STEP #3 - real-time database : read messages
  * ========
  * 1) import 'initial_messages.json' to firebase console (database tab)
- * 2)
  * ========
  * NOTES:
  * you can use 'firebase' object
