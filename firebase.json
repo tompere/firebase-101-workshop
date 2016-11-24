@@ -3,8 +3,10 @@
     "public": "./",
     "ignore": [
       "firebase.json",
-      "database-rules.json",
-      "storage.rules"
+      "database.rules.json",
+      "storage.rules",
+      "README.md",
+      "initial_messages.json"
     ]
   }
 }
