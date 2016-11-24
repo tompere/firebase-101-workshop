@@ -6,5 +6,3 @@ Podfile.lock
 xcuserdata/
 *.xcworkspace/
 GoogleService-Info.plist
-web-start/
-web/
