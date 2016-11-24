@@ -6,7 +6,7 @@
  **/
 
 function pushMessageImpl(messagesRef, message, onSuccess, onError) {
-  messagesRef.push(message)
+  return messagesRef.push(message)
     .then(onSuccess)
     .catch(onError);
 }

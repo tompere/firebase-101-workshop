@@ -119,8 +119,15 @@ FriendlyChat.prototype.saveMessage = function(e) {
 // Sets the URL of the given img element with the URL of the image stored in Firebase Storage.
 FriendlyChat.prototype.setImageUrl = function(imageUri, imgElement) {
   imgElement.src = imageUri;
-
-  // TODO(DEVELOPER): If image is on Firebase Storage, fetch image URL and set img element's src.
+  if (imageUri.startsWith('gs://')) {
+    imgElement.src = FriendlyChat.LOADING_IMAGE_URL; // Display a loading image first.
+    api.getDownloadUrl(imageUri)
+      .then(function (downloadUrl) {
+        imgElement.src = downloadUrl;
+      });
+  } else {
+    imgElement.src = imageUri;
+  }
 };
 
 // Saves a new message containing an image URI in Firebase.
@@ -142,9 +149,25 @@ FriendlyChat.prototype.saveImageMessage = function(event) {
   }
   // Check if the user is signed-in
   if (this.checkSignedInWithMessage()) {
-
-    // TODO(DEVELOPER): Upload image to Firebase storage and add message.
-
+    // We add a message with a loading icon that will get updated with the shared image.
+    var currentUser = this.auth.currentUser;
+    var databaseSnapshot;
+    var imageMessage = {
+      name: currentUser.email,
+      imageUrl: FriendlyChat.LOADING_IMAGE_URL,
+      photoUrl: getRoboHashImageUrl(currentUser.email)
+    };
+    api.pushImageMessage(this.messagesRef, imageMessage)
+      .then(function (data) {
+        databaseSnapshot = data;
+        return api.uploadImageToStorage(currentUser, file);
+      })
+      .then(function (storageSnapshot) {
+        return api.updateImageUri(databaseSnapshot, storageSnapshot)
+      })
+      .catch(function (error) {
+        console.error('There was an error uploading a file to Firebase Storage:', error);
+      });
   }
 };
 
@@ -157,7 +180,7 @@ FriendlyChat.prototype.invokeAuth = function () {
   } else if (mode === 'sign-up') {
     api.signUp(email, password, closeModal.bind(this), this.setError);
   } else {
-   throw new Error('did not recognized modal mode: ' + mode);
+    throw new Error('did not recognized modal mode: ' + mode);
   }
 };
 
@@ -233,11 +256,11 @@ FriendlyChat.resetMaterialTextfield = function(element) {
 
 // Template for messages.
 FriendlyChat.MESSAGE_TEMPLATE =
-    '<div class="message-container">' +
-      '<div class="spacing"><div class="pic"></div></div>' +
-      '<div class="message"></div>' +
-      '<div class="name"></div>' +
-    '</div>';
+  '<div class="message-container">' +
+  '<div class="spacing"><div class="pic"></div></div>' +
+  '<div class="message"></div>' +
+  '<div class="name"></div>' +
+  '</div>';
 
 // A loading image URL.
 FriendlyChat.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
@@ -291,14 +314,14 @@ FriendlyChat.prototype.toggleButton = function() {
 FriendlyChat.prototype.checkSetup = function() {
   if (!window.firebase || !(firebase.app instanceof Function) || !window.config) {
     window.alert('You have not configured and imported the Firebase SDK. ' +
-        'Make sure you go through the codelab setup instructions.');
+      'Make sure you go through the codelab setup instructions.');
   } else if (config.storageBucket === '') {
     window.alert('Your Firebase Storage bucket has not been enabled. Sorry about that. This is ' +
-        'actually a Firebase bug that occurs rarely. ' +
-        'Please go and re-generate the Firebase initialisation snippet (step 4 of the codelab) ' +
-        'and make sure the storageBucket attribute is not empty. ' +
-        'You may also need to visit the Storage tab and paste the name of your bucket which is ' +
-        'displayed there.');
+      'actually a Firebase bug that occurs rarely. ' +
+      'Please go and re-generate the Firebase initialisation snippet (step 4 of the codelab) ' +
+      'and make sure the storageBucket attribute is not empty. ' +
+      'You may also need to visit the Storage tab and paste the name of your bucket which is ' +
+      'displayed there.');
   }
 };
 

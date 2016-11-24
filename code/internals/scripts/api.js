@@ -9,5 +9,9 @@ window.api = {
   createMessagesRef: step3._createMessagesRef,
   clearListeners: step3._clearListeners,
   loadMessagesAndAttachListeners: step3._loadMessagesAndAttachListeners,
-  pushMessage: step4._pushMessage
+  pushMessage: step4._pushMessage,
+  pushImageMessage: step5._pushImageMessage,
+  uploadImageToStorage: step5._uploadImageToStorage,
+  updateImageUri: step5._updateImageUri,
+  getDownloadUrl: step5._getDownloadUrl
 };
