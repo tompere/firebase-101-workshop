@@ -1,41 +1,8 @@
 /**
- * STEP #5 - storage : upload and fetch images
+ * STEP #5 - Authorization - database and storage
  * ========
- * NOTES:
- * you can use 'firebase' object
+ * THIS STEP REQUIRES NO JAVASCRIPT CODE (don't write anything in this file).
+ *
+ * In this step you will implement security rules for database.
+ * Edit the following file: `database-rules.json` (https://firebase.google.com/docs/database/security/) > Update the rules to the following which only allows authenticated users to read and write
  **/
-
-function buildImageRef(currentUser, file) {
-  return (currentUser.uid + '/' + Date.now() + '/' + file.name);
-}
-
-function pushImageMessageImpl(messagesRef, imageMessage) {
-  return messagesRef.push(imageMessage);
-}
-
-function uploadImageToStorageImpl(currentUser, file) {
-  return firebase.storage().ref(buildImageRef(currentUser, file))
-    .put(file, {contentType: file.type})
-}
-
-function updateImageUriImpl(databaseSnapshot, storageSnapshot) {
-  var filePath = storageSnapshot.metadata.fullPath;
-  return databaseSnapshot.update({
-    imageUrl: firebase.storage().ref(filePath).toString()
-  });
-}
-
-function getDownloadUrlImpl(imageUri) {
-  return firebase.storage().refFromURL(imageUri)
-    .getMetadata()
-    .then(function (metadata) {
-      return metadata.downloadURLs[0];
-    });
-}
-
-window.step5 = {
-  _pushImageMessage: pushImageMessageImpl,
-  _uploadImageToStorage: uploadImageToStorageImpl,
-  _updateImageUri: updateImageUriImpl,
-  _getDownloadUrl: getDownloadUrlImpl
-};

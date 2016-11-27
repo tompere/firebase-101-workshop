@@ -1,10 +1,13 @@
 /**
  * STEP #3 - real-time database : read messages
  * ========
- * 1) import 'initial_messages.json' to firebase console (database tab)
- * ========
+ * In this step you will create a database endpoint reference and query it (i.e. read data).
+ * This will also include attaching data events listeners, and extract data from query result.
+ * At the end of this step your app should show dummy messages in chat window (see below).
+ *
  * NOTES:
- * you can use 'firebase' object
+ * 1) you should import 'initial_messages.json' to firebase console (database tab).
+ * 2) use firebase.database() service.
  **/
 
 function createMessagesRefImpl() {

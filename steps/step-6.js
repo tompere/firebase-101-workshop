@@ -1,9 +1,14 @@
 /**
- * STEP #6 - Authorization - database and storage
+ * STEP #6 - Hosting - deploy your webapp to production (CDN)
  * ========
- * NOTES:
- * You don't need to implement any js code here.
- * You should create two authorization files:
- * 1) database-rules.json (https://firebase.google.com/docs/database/security/) > Update the rules to the following which only allows authenticated users to read and write
- * 2) storage.rules (https://firebase.google.com/docs/storage/security/start) > Update the rules to the following which only allows users to write to their own folder
- **/
+ * THIS STEP REQUIRES NO JAVASCRIPT CODE (don't write anything in this file).
+ *
+ * In this step you will deploy your app to firebase hosting and make it public to everyone.
+ *
+ * 1) Install node.js (https://nodejs.org/en/).
+ * 2) In cmd/terminal enter `npm install -g firebase-tools`.
+ * 3) In cmd/terminal enter `firebase login` (and manually login to your google account in opened browser).
+ * NOTE - you already have a `firebase.json` file, so you can skip `firebase init` step (should you prompt to do so).
+ * 4) In cmd/terminal enter `firebase deploy`.
+ * 5) check your public url (see 'Hosting Site' in previous command output).
+ * **/
