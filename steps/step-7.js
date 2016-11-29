@@ -38,7 +38,7 @@ function getDownloadUrlImpl(imageUri) {
   // TODO(hint) - look at `getMetadata` API in docs
 }
 
-window.step5 = {
+window.step7 = {
   _pushImageMessage: pushImageMessageImpl,
   _uploadImageToStorage: uploadImageToStorageImpl,
   _updateImageUri: updateImageUriImpl,
