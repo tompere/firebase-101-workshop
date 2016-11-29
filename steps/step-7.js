@@ -38,7 +38,7 @@ function getDownloadUrlImpl(imageUri) {
     });
 }
 
-window.step5 = {
+window.step7 = {
   _pushImageMessage: pushImageMessageImpl,
   _uploadImageToStorage: uploadImageToStorageImpl,
   _updateImageUri: updateImageUriImpl,
