@@ -2,7 +2,7 @@
 
 ## Overview
 
-An intro workshop to [firebase](firebase.google.com) and its core feature using a web client.
+An intro workshop to [firebase](https://firebase.google.com/) and its core feature using a web client.
 
 The workshop source code is based on firebase [friendly chat codelab](https://github.com/firebase/friendlychat/), but it adds another layer of abstraction (see [step-x](https://github.com/tompere/firebase-101-workshop/tree/master/steps)*.js files and [api.js](https://github.com/tompere/firebase-101-workshop/blob/master/internals/scripts/api.js)), in order to help javascript/ novice programmers focus on firebase SDK usage, and only implement javascript functions.
 
