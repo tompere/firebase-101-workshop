@@ -1,6 +1,6 @@
 # Workshop References
 
-see [README](README)
+see [README](README.md)
 
 ### Source code
 * [step 0](https://github.com/tompere/firebase-101-workshop/tree/master) ([download zip](https://github.com/tompere/firebase-101-workshop/archive/master.zip))
