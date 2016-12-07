@@ -14,7 +14,7 @@ The workshop source code is based on firebase [friendly chat codelab](https://gi
  * in a javascript function with a `TODO(dev)` comment.
 * note that every function signature (i.e. the arguments it recieve) should not be modified.
 * additional firebase configuration code is required in [storage.rules](https://github.com/tompere/firebase-101-workshop/blob/master/storage.rules) and [database.rules.json](https://github.com/tompere/firebase-101-workshop/blob/master/database.rules.json)
-* in e is full with firebase docs links for each step. 
+* in every file the requires implementation, you will find relevant firebase docs link (look for `TODO(docs)` comment). 
 
 
 ## License
